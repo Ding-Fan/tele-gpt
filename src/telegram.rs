@@ -27,8 +27,22 @@ async fn handle_message(bot: Bot, msg: Message) {
         .map(|s| s.to_string())
         .collect();
 
-    if msg.from().is_none() || !white_list.contains(&msg.from().unwrap().id.to_string()) {
+    let chat_id = msg.chat.id;
+
+    let user_id = msg.from().unwrap().id.to_string();
+
+    println!("user id: {}", user_id);
+
+    if msg.from().is_none() || !white_list.contains(&user_id) {
         // Ignore messages from users with a different ID
+        let _sent = bot
+            .send_message(chat_id, "️年轻人，这里不是你该来的地慌")
+            .await;
+        let _sent = bot.send_message(chat_id, "️不是你该来的地慌").await;
+        let _sent = bot.send_message(chat_id, "️该来的地慌").await;
+        let _sent = bot.send_message(chat_id, "️地慌").await;
+        let _sent = bot.send_message(chat_id, "️慌").await;
+        let _sent = bot.send_message(chat_id, "小").await;
         return;
     }
 
@@ -37,7 +51,6 @@ async fn handle_message(bot: Bot, msg: Message) {
     //     return;
     // }
 
-    let chat_id = msg.chat.id;
     let user_message = msg.text().unwrap_or_default();
 
     // Send the initial message
