@@ -24,7 +24,8 @@ pub async fn fetch_chat_gpt_output(
     let payload = serde_json::json!({
         "model": "gpt-3.5-turbo",
         "messages": [
-            {"role": "user", "content": user_message}
+          // {"role": "system", "content": "You are a helpful assistant."},
+          {"role": "user", "content": user_message}
         ],
         "temperature": 0,
         "top_p": 1.0,
@@ -55,7 +56,20 @@ pub async fn fetch_chat_gpt_output(
                 println!("chunk: {:?}", chunk);
                 let mut utf8_str = String::from_utf8_lossy(&chunk).to_string();
 
-                let trimmed_str = utf8_str.trim_start_matches("data: ");
+                // ! the most first chunk might have two data:
+                // chunk: b"data: {\"id\":\"chatcmpl-72kgOPhcOQwHingS2AE69YZBBG75A\",\"object\":\"chat.completion.chunk\",\"created\":1680890460,\"model\":\"gpt-3.5-turbo-0301\",\"choices\":[{\"delta\":{\"role\":\"assistant\"},\"index\":0,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-72kgOPhcOQwHingS2AE69YZBBG75A\",\"object\":\"chat.completion.chunk\",\"created\":1680890460,\"model\":\"gpt-3.5-turbo-0301\",\"choices\":[{\"delta\":{\"content\":\"As\"},\"index\":0,\"finish_reason\":null}]}\n\n"
+                // trimmed_str: {"id":"chatcmpl-72kgOPhcOQwHingS2AE69YZBBG75A","object":"chat.completion.chunk","created":1680890460,"model":"gpt-3.5-turbo-0301","choices":[{"delta":{"role":"assistant"},"index":0,"finish_reason":null}]}
+                let second_part = utf8_str.splitn(3, "data: ").nth(2).unwrap_or(&utf8_str);
+
+                let trimmed_str = second_part.trim_start_matches("data: ");
+                println!("trimmed_str: {}", trimmed_str);
+
+                // ! the most last chunk might be "[DONE]"
+                if trimmed_str.trim_end() == "[DONE]" {
+                    println!("is done: {:?}", trimmed_str);
+                    continue;
+                }
+
                 let json_result: Result<Value, _> = serde_json::from_str(trimmed_str);
                 match json_result {
                     Ok(json) => {
