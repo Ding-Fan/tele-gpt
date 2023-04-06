@@ -1,5 +1,9 @@
+mod gpt;
+mod telegram;
+
 use dotenvy::dotenv;
-use std::env;
+
+// use std::env;
 use teloxide::prelude::*;
 
 #[tokio::main]
@@ -16,9 +20,11 @@ async fn main() {
 
     let bot = Bot::from_env();
 
-    teloxide::repl(bot, |bot: Bot, msg: Message| async move {
-        bot.send_dice(msg.chat.id).await?;
-        Ok(())
-    })
-    .await;
+    // teloxide::repl(bot, |bot: Bot, msg: Message| async move {
+    //     bot.send_dice(msg.chat.id).await?;
+    //     Ok(())
+    // })
+    // .await;
+
+    telegram::init_telegram_bot(bot).await;
 }
