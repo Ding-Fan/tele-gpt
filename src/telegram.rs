@@ -31,12 +31,17 @@ async fn handle_message(bot: Bot, msg: Message) {
 
     let user_id = msg.from().unwrap().id.to_string();
 
-    println!("user id: {}", user_id);
+    // println!("user id: {}", user_id);
 
     if msg.from().is_none() || !white_list.contains(&user_id) {
         // Ignore messages from users with a different ID
         let _sent = bot
-            .send_message(chat_id, "️年轻人，这里不是你该来的地慌")
+            .send_message(
+                chat_id,
+                format!("年轻人 `{}` ，这里不是你该来的地慌", user_id),
+                // * add feature
+                // parse_mode: "Markdown"
+            )
             .await;
         let _sent = bot.send_message(chat_id, "️不是你该来的地慌").await;
         let _sent = bot.send_message(chat_id, "️该来的地慌").await;
@@ -57,7 +62,7 @@ async fn handle_message(bot: Bot, msg: Message) {
     bot.send_chat_action(chat_id, ChatAction::Typing)
         .await
         .unwrap();
-    let sent_message = bot.send_message(chat_id, "...✍️").await.unwrap();
+    let sent_message = bot.send_message(chat_id, "少女祈祷中...").await.unwrap();
 
     // Fetch and update the message with the GPT output
     if let Err(e) = gpt::fetch_chat_gpt_output(&bot, chat_id, &sent_message, &user_message).await {

@@ -18,7 +18,7 @@ pub async fn fetch_chat_gpt_output(
     let api_key = env::var("OPENAI_API_KEY").unwrap();
     let api_url = "https://api.openai.com/v1/chat/completions";
 
-    println!("user_message: {}", user_message);
+    // println!("user_message: {}", user_message);
     let mut start = Instant::now();
 
     let payload = serde_json::json!({
@@ -53,7 +53,7 @@ pub async fn fetch_chat_gpt_output(
         match chunk_result {
             Ok(chunk) => {
                 let chunk: Bytes = chunk;
-                println!("chunk: {:?}", chunk);
+                // println!("chunk: {:?}", chunk);
                 let mut utf8_str = String::from_utf8_lossy(&chunk).to_string();
 
                 // ! the most first chunk might have two data:
@@ -62,11 +62,11 @@ pub async fn fetch_chat_gpt_output(
                 let second_part = utf8_str.splitn(3, "data: ").nth(2).unwrap_or(&utf8_str);
 
                 let trimmed_str = second_part.trim_start_matches("data: ");
-                println!("trimmed_str: {}", trimmed_str);
+                // println!("trimmed_str: {}", trimmed_str);
 
                 // ! the most last chunk might be "[DONE]"
                 if trimmed_str.trim_end() == "[DONE]" {
-                    println!("is done: {:?}", trimmed_str);
+                    // println!("is done: {:?}", trimmed_str);
                     continue;
                 }
 
@@ -88,7 +88,7 @@ pub async fn fetch_chat_gpt_output(
                                         output.push_str(content_str);
                                         count += 1;
                                         if count % update_interval == 0 {
-                                            let tmp = format!("{}...✍️", output);
+                                            let tmp = format!("{}💭️", output);
                                             bot.send_chat_action(chat_id, ChatAction::Typing)
                                                 .await
                                                 .unwrap();

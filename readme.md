@@ -14,3 +14,19 @@ screen -S tele-gpt
 screen -r tele-gpt
 ```
 
+
+### resources
+
+https://github.com/tokio-rs/tokio
+A runtime for writing reliable asynchronous applications with Rust. Provides I/O, networking, scheduling, timers, ...
+
+https://github.com/seanmonstar/reqwest
+An easy and powerful Rust HTTP Client
+
+https://github.com/teloxide/teloxide/network/dependents?dependents_after=Mjc5OTg5NTc1MTE
+public repositories using teloxide
+
+https://github.com/BillGPT/GPTelegram/blob/main/src/gpt.rs
+https://github.com/cyphersnake/greetings-chatgpt/blob/master/src/main.rs
+https://github.com/Yevgnen/chatgpt_bot/blob/7aac31e8ee1555274114da98f3e5a059574923fc/src/main.rs#L151
+
